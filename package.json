@@ -12,7 +12,11 @@
     "#models": "./src/models/index.ts",
     "#types": "./src/types/index.ts",
     "#routes": "./src/routes/index.ts",
-    "#utils": {
+    "#controllers": "./src/controllers/index.ts",
+    "#schemas": "./src/schemas/index.ts",
+    "#middleware": "./src/middleware/index.ts",
+      
+  "#utils": {
       "development": "./src/utils/index.ts",
       "default": "./dist/utils/index.js"
     }
