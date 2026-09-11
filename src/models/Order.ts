@@ -10,14 +10,18 @@ const orderSchema = new Schema({
       productId: {
         type: Schema.Types.ObjectId,
         ref: 'Product', // Name des referenzierten Models für .populate()
-        required: true
+        //required: true
       },
       quantity: {
         type: Number,
         required: true,
         min: [1, 'Die Menge muss mindestens 1 betragen.'],
         default: 1
-      }
+      },
+      price: { 
+      type: Number, 
+      required: true // Der Preis zum Zeitpunkt des Kaufs
+    }
     }
   ],
     total: {
@@ -27,6 +31,6 @@ const orderSchema = new Schema({
     }
    
 }, {
-    timestamps: true  //pus timestamps?
+    timestamps: true  //plus timestamps?
 });
 export default model('Order', orderSchema);

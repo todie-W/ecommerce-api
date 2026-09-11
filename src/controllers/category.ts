@@ -14,15 +14,14 @@ export const createCategory: RequestHandler = async (req, res) => {
   const { name } = req.body as CategoryType;
 
   if (!name) throw new Error('Name is required');
-    throw new Error('name isrequired');
 
     //ggf. nicht nötig, da name unique ist und Mongoose automatisch einen Fehler wirft, wenn ein Duplikat erstellt wird
 //    const found = await Category.findOne({ name });
 //   if (found) throw new Error('Category already exists');
 
-//   const category = await Category.create({ name });
+   const category = await Category.create({ name });
 
-//   res.json(category);
+   res.json(category);
 };
 
 export const getCategoryById: RequestHandler = async (req, res) => {

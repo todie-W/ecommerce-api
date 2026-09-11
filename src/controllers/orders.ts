@@ -4,6 +4,9 @@ import type { OrderType } from '#types';
 import mongoose, { Schema, model } from 'mongoose';
 import '#db';
 
+//const Order = require('../models/Order');
+import { Product } from '#models';
+
 
 export const getOrders: RequestHandler = async (req, res) => {
   const orders = await Order.find();
@@ -12,12 +15,40 @@ export const getOrders: RequestHandler = async (req, res) => {
 };
 
 
+  //const { userId, items } = req.body; 
+  // let total = 0;
+  // const productsForOrder = [];
+
+
+  //     // Berechnung: Einzelpreis x Menge für die Gesamtsumme
+  //     total += dbProduct.price * item.quantity;
+  //      // Produkt-Snapshot für dieses Order-Dokument vorbereiten
+  //     productsForOrder.push({
+  //       productId: _id,
+  //       quantity: item.quantity,
+  //       price: dbProduct.price // Hier wird der Preis fixiert
+  //     });
+  //   }
+
+  //   // 2. Erstelle die Bestellung in der Datenbank
+  //   const order = await Order.create({
+  //     userId,
+  //     products: productsForOrder,
+  //     total: total
+  //   });
+
 export const createOrder: RequestHandler = async (req, res) => {
-  const { userId, products, quantity, total, timestamps } = req.body as OrderType;
+  const { userId, products } = req.body as OrderType;
 
-  if (!userId || !products || products.length === 0 || quantity < 1 || !total)
-    throw new Error('userId, products, quantity, and total are required');
+  if (!userId || !products || products.length === 0)
+    throw new Error('userId and products are required');
 
+  const total = products.reduce((sum, product) => {
+    return sum + product.price * product.quantity;
+  }, 0);
+
+  if (total <= 0) throw new Error('Order total must be greater than zero');
+ 
   const order = await Order.create({ userId, products, total });  //quantity is calculated from products, so no need to store it separately
     
                                                                   //timestamps are automatically handled by Mongoose, so no need to pass them in the request body   
@@ -40,8 +71,15 @@ export const updateOrder: RequestHandler = async (req, res) => {
     body,
     params: { id } //? The id is extracted from the request parameters, which is used to find the specific order to update 
   } = req;
-  const { userId, products, total } = body as OrderType;
-  if (!userId || !products || products.length === 0 || !total) throw new Error('userId, products, and total are required');
+
+  const { userId, products } = body as OrderType;
+  if (!userId || !products || products.length === 0) throw new Error('userId and products are required');
+
+
+  const total = products.reduce((sum, product) => {
+    return sum + product.price * product.quantity;
+  }, 0);
+  if (total <= 0) throw new Error('Order total must be greater than zero');
 
   const order = await Order.findById(id);
   if (!order) throw new Error('Order not found', { cause: 404 });

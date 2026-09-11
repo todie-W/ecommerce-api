@@ -22,6 +22,7 @@ export type OrderType = {
   products: {
     productId: Types.ObjectId;
     quantity: number;
+    price: number;
   }[];
   quantity: number;
   total: number;

@@ -13,8 +13,9 @@ export const getProducts: RequestHandler = async (req, res) => {
 export const createProduct: RequestHandler = async (req, res) => {
   const { name, description, price, categoryId } = req.body as ProductType;
 
-  if (!name || !description || !price || !categoryId)
+  if (!name || !description || !price || !categoryId) {
     throw new Error('Name, description, price, and category are required');
+  }
 
   const found = await Product.findOne({ name });
   if (found) throw new Error('Product already exists');
